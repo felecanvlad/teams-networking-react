@@ -1,5 +1,23 @@
-export const PersonsTable = ({border,persons}) => (
-    <table border = {border}>
+function getValues () {
+    const firstName = document.querySelector("input[name=firstName]").value;
+    const lastName = document.querySelector("input[name=lastName]").value;
+    const gitHub = document.querySelector("input[name=gitHub]").value;
+    
+    const person = {
+        firstName, 
+        lastName, 
+        gitHub
+    };
+    return person;
+}
+
+export const PersonsTable = ({border,persons, onSubmit, onDelete}) => (
+   <form id = "main-form" onSubmit = {e => {
+       e.preventDefault();
+       const values = getValues();
+       onSubmit(values);
+   }}>
+        <table border = {border}>
     <thead>
         <tr>
             <th>First Name</th>
@@ -17,7 +35,9 @@ export const PersonsTable = ({border,persons}) => (
                  <a target="_blank" href="https://github.com/{gitHub}">GitHub</a>
              </td>
              <td>
-                 <a href="#" className = "delete-row" data-id = "{person.id}">&#10006;</a>
+                 <a href="#" className = "delete-row" onClick = {e => {
+                     onDelete(person.id);
+                 }}>&#10006;</a>
                  <a href="#" className = "edit-row" data-id = "{person.id}">&#9998;</a>
              </td>
          </tr>
@@ -26,18 +46,19 @@ export const PersonsTable = ({border,persons}) => (
     <tfoot>
         <tr>
             <td>
-                <input type="text" placeholder="Enter first Name" name="firstName"/>
+                <input type="text" required placeholder="Enter first Name" name="firstName"/>
             </td>
             <td>
-                <input type="text" placeholder="Enter last Name" name="lastName"/>
+                <input type="text" required placeholder="Enter last Name" name="lastName"/>
             </td>
             <td>
-                <input type="text" placeholder="GitHub account" name="gitHub"/>
+                <input type="text" required placeholder="GitHub account" name="gitHub"/>
             </td>
             <td>
-                <button>Save</button>
+                <button type="submit">Save</button>
             </td>
         </tr>
     </tfoot>
 </table>
+   </form>
 );
