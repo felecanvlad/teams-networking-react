@@ -9,9 +9,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      persons : []
     }
-    console.warn ('props', props);
   }
 
   componentDidMount () {
@@ -37,11 +35,7 @@ class App extends Component {
           console.warn(r);
           if (r.success) {
             person.id = r.id;
-            const persons = this.state.persons.concat(person);
-            this.setState({
-              persons
-            });
-              //this.load();
+            this.props.onAdd(person);
           }
       });
   }
@@ -54,7 +48,7 @@ class App extends Component {
       },
       body: JSON.stringify({ id })
     }).then(r => r.json()).then(status => {
-      this.load();
+      this.props.onDelete(id);
     });
   }
   
@@ -77,13 +71,15 @@ class App extends Component {
     );
   }
 }
-const mapStateToProps = state => {
-  console.info('map state to props', state);
-  return {
+const mapStateToProps = state => ({
     persons: state.persons
-  }
-}
+  });
 
-const AppContainer = connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  onAdd: (person) => dispatch ({type: 'TEAM_ADDED', person}),
+  onDelete: id => dispatch({type: 'TEAM_REMOVED', id})
+});
+
+const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App);
 
 export default AppContainer;
